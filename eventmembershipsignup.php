@@ -202,21 +202,28 @@ function eventmembershipsignup_civicrm_xmlMenu(&$files) {
  * Implements hook_civicrm_install().
  */
 function eventmembershipsignup_civicrm_install() {
-  return _eventmembershipsignup_civix_civicrm_install();
+  _eventmembershipsignup_civix_civicrm_install();
+}
+
+/**
+ * Implementation of hook_civicrm_postInstall
+ */
+function eventmembershipsignup_civicrm_postInstall() {
+  _eventmembershipsignup_civix_civicrm_postInstall();
 }
 
 /**
  * Implements hook_civicrm_uninstall().
  */
 function eventmembershipsignup_civicrm_uninstall() {
-  return _eventmembershipsignup_civix_civicrm_uninstall();
+  _eventmembershipsignup_civix_civicrm_uninstall();
 }
 
 /**
  * Implements hook_civicrm_enable().
  */
 function eventmembershipsignup_civicrm_enable() {
-  return _eventmembershipsignup_civix_civicrm_enable();
+  _eventmembershipsignup_civix_civicrm_enable();
 }
 
 /**
@@ -240,5 +247,5 @@ function eventmembershipsignup_civicrm_upgrade($op, CRM_Queue_Queue $queue = NUL
  * is installed, disabled, uninstalled.
  */
 function eventmembershipsignup_civicrm_managed(&$entities) {
-  return _eventmembershipsignup_civix_civicrm_managed($entities);
+  _eventmembershipsignup_civix_civicrm_managed($entities);
 }
