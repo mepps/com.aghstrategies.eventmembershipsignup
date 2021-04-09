@@ -56,13 +56,16 @@ function eventmembershipsignup_civicrm_postProcess($formName, &$form) {
 function eventmembershipsignup_civicrm_post($op, $objectName, $objectId, &$objectRef) {
   // Save new registration or membership.
   if ($op == 'create' && $objectName == 'LineItem') {
-    $price_field_value_id = 0;
-    $args = array(
-      1 => array(
-        is_array($objectRef) ? $objectRef['price_field_value_id'] : $objectRef->price_field_value_id,
-        'Integer',
-      ),
-    );
+    $priceFieldValueID = is_array($objectRef) ? $objectRef['price_field_value_id'] : $objectRef->price_field_value_id;
+    if (empty($priceFieldValueID)) {
+      // For example "percentagepricesetfield" creates percentage lineItem with NULL price_field_value_id
+      // In this case there is nothing to do because there will be no linked event/membership for that lineItem
+      // If we try to run the query it will crash.
+      return;
+    }
+    $args = [
+      1 => [$priceFieldValueID, 'Integer'],
+    ];
     $sql = <<<'HERESQL'
 SELECT id, price_option_id, entity_table, entity_ref_id
 FROM civicrm_option_signup
@@ -202,21 +205,28 @@ function eventmembershipsignup_civicrm_xmlMenu(&$files) {
  * Implements hook_civicrm_install().
  */
 function eventmembershipsignup_civicrm_install() {
-  return _eventmembershipsignup_civix_civicrm_install();
+  _eventmembershipsignup_civix_civicrm_install();
+}
+
+/**
+ * Implementation of hook_civicrm_postInstall
+ */
+function eventmembershipsignup_civicrm_postInstall() {
+  _eventmembershipsignup_civix_civicrm_postInstall();
 }
 
 /**
  * Implements hook_civicrm_uninstall().
  */
 function eventmembershipsignup_civicrm_uninstall() {
-  return _eventmembershipsignup_civix_civicrm_uninstall();
+  _eventmembershipsignup_civix_civicrm_uninstall();
 }
 
 /**
  * Implements hook_civicrm_enable().
  */
 function eventmembershipsignup_civicrm_enable() {
-  return _eventmembershipsignup_civix_civicrm_enable();
+  _eventmembershipsignup_civix_civicrm_enable();
 }
 
 /**
@@ -240,5 +250,5 @@ function eventmembershipsignup_civicrm_upgrade($op, CRM_Queue_Queue $queue = NUL
  * is installed, disabled, uninstalled.
  */
 function eventmembershipsignup_civicrm_managed(&$entities) {
-  return _eventmembershipsignup_civix_civicrm_managed($entities);
+  _eventmembershipsignup_civix_civicrm_managed($entities);
 }
